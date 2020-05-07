@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
+using SeleniumExtras.PageObjects;
+using SeleniumPractice;
 
 namespace SeleniumTest
 {
@@ -129,6 +132,39 @@ namespace SeleniumTest
 
                     driver.FindElement(By.XPath("//*[@id='u_0_m']")).SendKeys("Tsai");
                     driver.FindElement(By.XPath("//*[@id='u_0_o']")).SendKeys("Nick");
+                }
+            }
+            catch (Exception e)
+            {
+                executeResult = false;
+            }
+
+            Assert.IsTrue(executeResult);
+        }
+
+
+        [TestMethod]
+        public void RegistFacebookAccountByPageFactory()
+        {
+            var executeResult = true;
+            try
+            {
+                using (IWebDriver driver = new ChromeDriver())
+                {
+                    driver.Navigate().GoToUrl("https://www.facebook.com/");
+
+                    var loginPage = new LoginInfoPage();
+                    PageFactory.InitElements(driver, loginPage);
+
+                    loginPage.FistName.SendKeys("Nick");
+                    loginPage.LastName.SendKeys("Tsai");
+
+                    loginPage.BirthYear.SelectByValue("1991");
+                    loginPage.BirthMonth.SelectByValue("2");
+                    loginPage.BirthDay.SelectByValue("26");
+
+                    loginPage.SelectGenderAsMale();
+                    Thread.Sleep(8000);
                 }
             }
             catch (Exception e)
